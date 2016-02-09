@@ -5,16 +5,13 @@ local label     = require 'overfeat_label'
 torch.setdefaulttensortype('torch.FloatTensor')
 
 
-local opt = lapp([[
-Parameters
-   --network        (default 'small')      network size ( small | big )
-   --img            (default 'bee.jpg')    test image
-   --backend        (default 'nn')         specify backend ( nn | cunn | cudnn )
-   --inplace                               use inplace ReLU
-   --spatial                               use spatial mode (detection/localization)
-   --save           (default 'model.t7')   save model path
-   --threads        (default 4)            nb of threads
-]])
+local opt = {
+    network=network,
+    img=image,
+    backend="nn",
+    threads=1
+}
+
 torch.setnumthreads(opt.threads)
 print('==> #threads:', torch.getnumthreads())
 print('==> arguments')
@@ -153,15 +150,15 @@ end
 
 
 -- memcpy from system RAM to GPU RAM if cuda enabled
-if opt.backend == 'cunn' or opt.backend == 'cudnn' then
-   net:cuda()
-   img = img:cuda()
-end
+-- if opt.backend == 'cunn' or opt.backend == 'cudnn' then
+--   net:cuda()
+--   img = img:cuda()
+-- end
 
 
 -- save bare network (before its buffer filled with temp results)
-print('==> save model to:', opt.save)
-torch.save(opt.save, net)
+-- print('==> save model to:', opt.save)
+-- torch.save(opt.save, net)
 
 
 -- feedforward network
@@ -172,8 +169,8 @@ local out = net:forward(img)
 
 
 -- find output class name in non-spatial mode
-if not opt.spatial then
-   local prob, idx = torch.max(out, 1)
-   print(label[idx:squeeze()], prob:squeeze())
-end
+-- if not opt.spatial then
+local prob, idx = torch.max(out, 1)
+print(label[idx:squeeze()], prob:squeeze())
+-- end
 print('Time elapsed: ' .. timer:time().real .. ' seconds')
