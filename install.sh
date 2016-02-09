@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 
-# download python script from OverFeat repository
-wget https://raw.githubusercontent.com/sermanet/OverFeat/master/download_weights.py
-
-# download a sample image from OverFeat repository
-wget https://raw.githubusercontent.com/sermanet/OverFeat/master/samples/bee.jpg
-
-# run python script to download OverFeat weights
-python download_weights.py
+# download OverFeat weights
+mkdir -p data/default
+cd data/default
+curl -o weights.tgz http://cilvr.cs.nyu.edu/lib/exe/fetch.php?media=overfeat:overfeat-weights.tgz
+tar -xzf weights.tgz
+rm weights.tgz
 
 # move weights to current directory
 mv data/default/net_weight_* . 
