@@ -8,6 +8,7 @@ tar -xzf weights.tgz
 rm weights.tgz
 
 # move weights to current directory
+cd ../../
 mv data/default/net_weight_* . 
 rm -rf data/
 
